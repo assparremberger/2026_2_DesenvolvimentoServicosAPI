@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="meuH1">Aula01</h1>
+    <button onclick="alterar()">Alterar Div</button>
+    <div id="minhaDiv">Adalto</div>
+
+    <hr>
+    <script>
+        function alterar(){
+            var minhaDIV = document.getElementById("minhaDiv")
+            minhaDIV.style.background = "#00f"
+            minhaDIV.style.color = "#fff"
+            minhaDIV.style.width = "50%"
+            minhaDIV.innerHTML += " <u> Sparremberger</u>"
+        }
+
+        document.write("Olá pessoal")
+        //document.getElementById("meuH1").innerHTML = "Aula01 <i>JS</i>"
+        document.getElementById("meuH1").innerText = "Aula01 <i>JS</i>"
+    </script>
+    
+</body>
+</html>
