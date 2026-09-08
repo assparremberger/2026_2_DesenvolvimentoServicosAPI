@@ -35,7 +35,7 @@ function getProdutos(){
                             <td>${prod.id}</td>
                             <td>${prod.nome}</td>
                             <td>${prod.preco}</td>
-                            <td><button onclick="editar(${prod.id})">
+                            <td><button onclick="editar(${prod.id}, '${prod.nome}' , ${prod.preco} )">
                                 Editar</button>
                             </td>
                             <td><button onclick="excluir(${prod.id})">
@@ -70,6 +70,7 @@ function excluir( idProd ){
 }
 
 function salvar(){
+    const txtId = document.getElementById("txtId")
     const txtNome = document.getElementById("txtNome")
     const txtPreco = document.getElementById("txtPreco")
     if( txtNome.value == "" ){
@@ -79,22 +80,38 @@ function salvar(){
         if( txtPreco.value != "" ){
             preco = parseFloat(  txtPreco.value.replace( "," , "."  ) )
         }
+
         const req = new XMLHttpRequest()
-        req.onreadystatechange = function(){
-            if( this.readyState == 4 && this.status == 200){
-                const objJSON = JSON.parse( this.responseText )
-                var txt = objJSON.resposta
-                if( objJSON.id ) {
-                    txt += "\nID: " + objJSON.id
+        // caso seha para adicionar, o campo ID estará vazio
+        if( txtId.value == ""){
+            req.onreadystatechange = function(){
+                if( this.readyState == 4 && this.status == 200){
+                    const objJSON = JSON.parse( this.responseText )
+                    var txt = objJSON.resposta
+                    if( objJSON.id ) {
+                        txt += "\nID: " + objJSON.id
+                        txtNome.value = ""
+                        txtPreco.value = ""
+                    }
+                    alert( txt )
+                    getProdutos()
+                    
+                }
+            }
+            req.open("POST" , "servidor.php?inserir")
+        }else{
+            req.onreadystatechange = function(){
+                if( this.readyState == 4 && this.status == 200){
+                    const objJSON = JSON.parse( this.responseText )
+                    alert( objJSON.resposta )
+                    getProdutos()
+                    txtId.value = ""
                     txtNome.value = ""
                     txtPreco.value = ""
                 }
-                alert( txt )
-                getProdutos()
-                
             }
+            req.open("POST" , "servidor.php?editar&idProduto=" + txtId.value )
         }
-        req.open("POST" , "servidor.php?inserir")
         req.setRequestHeader("Content-type" , "application/x-www-form-urlencoded")
         req.send(`name=${txtNome.value}&price=${preco}`)
     }
@@ -103,3 +120,10 @@ function salvar(){
 
 // Exercício
 // Fazer as funções necessárias para poder editar um produto
+
+function editar( id, nome, preco){
+    document.getElementById("txtId").value = id
+    document.getElementById("txtNome").value = nome
+    document.getElementById("txtPreco").value = preco
+
+}
