@@ -68,3 +68,38 @@ function excluir( idProd ){
         req.send()
     }
 }
+
+function salvar(){
+    const txtNome = document.getElementById("txtNome")
+    const txtPreco = document.getElementById("txtPreco")
+    if( txtNome.value == "" ){
+        alert("O campo nome é obrigatório")
+    }else{
+        var preco = 0.0
+        if( txtPreco.value != "" ){
+            preco = parseFloat(  txtPreco.value.replace( "," , "."  ) )
+        }
+        const req = new XMLHttpRequest()
+        req.onreadystatechange = function(){
+            if( this.readyState == 4 && this.status == 200){
+                const objJSON = JSON.parse( this.responseText )
+                var txt = objJSON.resposta
+                if( objJSON.id ) {
+                    txt += "\nID: " + objJSON.id
+                    txtNome.value = ""
+                    txtPreco.value = ""
+                }
+                alert( txt )
+                getProdutos()
+                
+            }
+        }
+        req.open("POST" , "servidor.php?inserir")
+        req.setRequestHeader("Content-type" , "application/x-www-form-urlencoded")
+        req.send(`name=${txtNome.value}&price=${preco}`)
+    }
+}
+
+
+// Exercício
+// Fazer as funções necessárias para poder editar um produto
