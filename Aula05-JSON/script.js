@@ -108,6 +108,7 @@ function salvar(){
                     txtId.value = ""
                     txtNome.value = ""
                     txtPreco.value = ""
+                    document.getElementById("msg").innerHTML = ""
                 }
             }
             req.open("POST" , "servidor.php?editar&idProduto=" + txtId.value )
@@ -125,5 +126,6 @@ function editar( id, nome, preco){
     document.getElementById("txtId").value = id
     document.getElementById("txtNome").value = nome
     document.getElementById("txtPreco").value = preco
+    document.getElementById("msg").innerHTML = "<i>Editando produto!</i>"
 
 }
