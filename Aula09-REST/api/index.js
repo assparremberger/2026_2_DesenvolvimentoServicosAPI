@@ -29,11 +29,70 @@ api.get( '/' , (req, res, next)=>{
 
 api.get( '/product' , (req, res, next)=>{
     conn("produto")
-        .select("id" , "nome" , "preco")
-        .orderBy( "nome" )
+        .join( "categoria" , "produto.codCategoria" , "=" , "categoria.id")
+        .select("produto.*" , "categoria.nome AS cat" )
+        .orderBy( "produto.nome" )
         .then( (dados) => {
             res.status( 200 )
             res.json( dados )
+        } )
+        .catch( next )
+} )
+
+api.get( '/product/:idProd' , (req, res, next)=>{
+    const idProduto = req.params.idProd
+    conn("produto")
+        .join( "categoria" , "produto.codCategoria" , "=" , "categoria.id")
+        .select("produto.*" , "categoria.nome AS cat" )
+        .where( "produto.id" , idProduto )
+        .first()
+        .then( (dados) => {
+            res.status( 200 )
+            res.json( dados )
+        } )
+        .catch( next )
+} )
+
+api.post( '/product' , (req, res, next)=>{
+    conn("produto")
+        .insert( req.body )
+        .then( (dados) => {
+            if( !dados ){
+                return next( http_errors( 404 , "Erro ao inserir"  ) )
+            }
+            res.status( 201 )
+            res.json( { resposta : "Produto inserido!" , id : dados[0] } )
+        } )
+        .catch( next )
+} )
+
+api.put( '/product/:idProd' , (req, res, next)=>{
+    const idProduto = req.params.idProd
+    conn("produto")
+        .where( "id", idProduto )
+        .update( req.body )
+        .then( (dados) => {
+            if( !dados ){
+                return next( http_errors( 404 , "Erro ao editar"  ) )
+            }
+            res.status( 200 )
+            res.json( { resposta : "Produto editado!"  } )
+            //res.json( dados )
+        } )
+        .catch( next )
+} )
+
+api.delete( '/product/:idProd' , (req, res, next)=>{
+    const idProduto = req.params.idProd
+    conn("produto")
+        .where( "id", idProduto )
+        .delete()
+        .then( (dados) => {
+            if( !dados ){
+                return next( http_errors( 404 , "Erro ao excluir"  ) )
+            }
+            res.status( 200 )
+            res.json( { resposta : "Produto excluído!"  } )
         } )
         .catch( next )
 } )
