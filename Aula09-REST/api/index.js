@@ -98,6 +98,77 @@ api.delete( '/product/:idProd' , (req, res, next)=>{
 } )
 
 
+// Gabarito do Exercício
+api.get( '/category' , (req, res, next)=>{
+    conn("categoria")
+        .select("*" )
+        .orderBy( "nome" )
+        .then( (dados) => {
+            res.status( 200 )
+            res.json( dados )
+        } )
+        .catch( next )
+} )
+
+api.get( '/category/:idCat' , (req, res, next)=>{
+    const idCat = req.params.idCat
+    conn("categoria")
+        .select("*" )
+        .where( "id" , idCat )
+        .first()
+        .then( (dados) => {
+            res.status( 200 )
+            res.json( dados )
+        } )
+        .catch( next )
+} )
+
+api.post( '/category' , (req, res, next)=>{
+    conn("categoria")
+        .insert( req.body )
+        .then( (dados) => {
+            if( !dados ){
+                return next( http_errors( 404 , "Erro ao inserir"  ) )
+            }
+            res.status( 201 )
+            res.json( { resposta : "Categoria inserida!" , id : dados[0] } )
+        } )
+        .catch( next )
+} )
+
+api.put( '/category/:idCat' , (req, res, next)=>{
+    const idCat = req.params.idCat
+    conn("categoria")
+        .where( "id", idCat )
+        .update( req.body )
+        .then( (dados) => {
+            if( !dados ){
+                return next( http_errors( 404 , "Erro ao editar"  ) )
+            }
+            res.status( 200 )
+            res.json( { resposta : "Categoria editada!"  } )
+        } )
+        .catch( next )
+} )
+
+api.delete( '/category/:idCat' , (req, res, next)=>{
+    const idCat = req.params.idCat
+    conn("categoria")
+        .where( "id", idCat )
+        .delete(  )
+        .then( (dados) => {
+            if( !dados ){
+                return next( http_errors( 404 , "Erro ao excluir"  ) )
+            }
+            res.status( 200 )
+            res.json( { resposta : "Categoria excluída!"  } )
+        } )
+        .catch( next )
+} )
+
+
+
+
 // Colocando o servidor no ar
 api.listen( PORT , ()=>{
     console.log( `API rodando em http://${HOSTNAME}:${PORT}` )
