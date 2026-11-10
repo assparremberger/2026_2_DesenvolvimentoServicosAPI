@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aula Integração</title>
 </head>
-<body>
+<body onload="carregarCategorias()">
     
     <h1>Produtos:</h1>
     Nome: <input type="text" id="txtNome" placeholder="Nome do Produto"> <br>
     Preço: <input type="text" id="txtPreco" placeholder="0.00"> <br>
+    Categoria: <select id="selCat">
+
+                </select> <br><br>
     <button onclick="add()">Adicionar</button>
 
 
