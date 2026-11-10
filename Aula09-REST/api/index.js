@@ -2,12 +2,24 @@ const express = require('express')
 const knex = require('knex')
 const http_errors = require('http-errors')
 
+//Adicionando biblioteca CORS
+const cors = require('cors')
+
 const PORT = 8001
 const HOSTNAME = "localhost"
 
 const api = express()
 api.use( express.json() )
 api.use( express.urlencoded( { extended : true } ) )
+
+api.use( cors() )
+
+// api.use( cors({
+//     origin : "http://localhost:80" ,
+//     methods : ["PUT" , "GET"] ,
+//     allowedHeaders : ['Content-type' , 'Authorization'] ,
+//     credentials : true 
+// }) )
 
 // Criar a conexão com o banco
 const conn = knex( {
@@ -77,7 +89,6 @@ api.put( '/product/:idProd' , (req, res, next)=>{
             }
             res.status( 200 )
             res.json( { resposta : "Produto editado!"  } )
-            //res.json( dados )
         } )
         .catch( next )
 } )
